@@ -8,6 +8,8 @@
 using namespace std;
 void newXml();
 void loadXml();
+void exit_program();
+void ls(const pugi::xml_node& node);
 void blockOpt(pugi::xml_node &blockNode, pugi::xml_node &blockDesc);
 pugi::xml_document doc;
 string filePath;
@@ -92,10 +94,7 @@ void loadXml() {
 			c = towlower(c);
 		});
 		if (opt == "ls") {
-			for (auto node : descNode.children()) {
-				cout << node.name() << endl;
-			}
-			
+			ls(descNode);
 		}
 		else if (opt == "find") {
 			string name;
@@ -134,12 +133,7 @@ void blockOpt(pugi::xml_node &blockNode,pugi::xml_node &blockDesc) {
 			c = towlower(c);
 		});
 		if (opt == "ls") {
-			for (auto &oneData : blockNode.children()) {
-				cout << oneData.name() << "\t ";
-				for (auto &attr : oneData.attributes()) {
-					cout << attr.as_string() << "\t ";
-				}
-			}
+			ls(blockNode);
 		}
 		else if (opt == "insert") {
 			string nodeName;
@@ -172,9 +166,22 @@ void blockOpt(pugi::xml_node &blockNode,pugi::xml_node &blockDesc) {
 			blockNode.remove_child(nodeName.c_str());
 		}
 		else if (opt == "exit") {
-			doc.save_file(filePath.c_str());
-			exit(0);
+			exit_program();
 		}
 	}
 	
+}
+
+void ls(const pugi::xml_node& node) {
+	for (const auto& child : node.children()) {
+		cout << child.name() << '\t';
+		for (const auto& attr : child.attributes()) {
+			cout << attr.as_string() << '\t';
+		}
+		cout << endl;
+	}
+}
+void exit_program() {
+	doc.save_file(filePath.c_str());
+	exit(0);
 }
