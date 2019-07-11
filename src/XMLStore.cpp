@@ -27,8 +27,6 @@ int main() {
 		else if (opt == "load") {
 			loadXml();
 		}
-					
-
 		else if (opt == "exit") {
 			doc.save_file(filePath.c_str());
 			exit(0);
@@ -62,7 +60,7 @@ void newXml() {
 		for (auto j = 0; j < attrNum; ++j) {
 			string attrName;
 			cin >> attrName;
-			blockNode.append_child(attrName.c_str());
+			blockNode.append_attribute(attrName.c_str());
 		}
 	}
 	doc.save_file(filePath.c_str());
@@ -136,10 +134,12 @@ void blockOpt(pugi::xml_node &blockNode,pugi::xml_node &blockDesc) {
 			ls(blockNode);
 		}
 		else if (opt == "insert") {
+			cout << "Node name : ";
 			string nodeName;
 			cin >> nodeName;
 			auto tempNode = blockNode.append_child(nodeName.c_str());
-			for (auto &des : blockDesc) {
+			
+			for (auto &des : blockDesc.attributes()) {
 				cout << des.name() << " :";
 				string input;
 				cin >> input;
